@@ -1,0 +1,589 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: black;
+}
+
+
+/* =========================
+   OVERLAY
+========================= */
+
+#overlay {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+
+/* =========================
+   ORION LOGO
+========================= */
+
+#logo {
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    width: 380px;
+
+    transform:
+        translate(-50%, -50%)
+        scale(1.30);
+
+    opacity: 0;
+
+    z-index: 1;
+
+    filter:
+        drop-shadow(0 0 8px #cdaaf9)
+        drop-shadow(0 0 18px #cdaaf9);
+}
+
+#logo.logo-flicker {
+    animation:
+        logoPowerOn
+        2.4s
+        linear
+        forwards;
+}
+
+@keyframes logoPowerOn {
+
+    0%   { opacity: 0; }
+
+    5%   { opacity: 0.035; }
+    9%   { opacity: 0.015; }
+    13%  { opacity: 0.055; }
+    17%  { opacity: 0; }
+
+    23%  { opacity: 0.045; }
+    27%  { opacity: 0.075; }
+    30%  { opacity: 0.025; }
+    34%  { opacity: 0.065; }
+    38%  { opacity: 0; }
+
+    44%  { opacity: 0.055; }
+    48%  { opacity: 0.085; }
+    51%  { opacity: 0.035; }
+    55%  { opacity: 0.095; }
+    59%  { opacity: 0.02; }
+
+    64%  { opacity: 0.10; }
+    68%  { opacity: 0.045; }
+    72%  { opacity: 0.115; }
+    76%  { opacity: 0.035; }
+
+    80%  { opacity: 0.125; }
+    84%  { opacity: 0.075; }
+
+    87%  { opacity: 0.135; }
+    90%  { opacity: 0.10; }
+
+    93%  { opacity: 0.145; }
+    95%  { opacity: 0.125; }
+
+    97%  { opacity: 0.15; }
+    100% { opacity: 0.15; }
+}
+
+
+/* =========================
+   BIOS
+========================= */
+
+#boot {
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    width: 90%;
+
+    color: #cdaaf9;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 21px;
+
+    line-height: 1.7;
+
+    text-align: center;
+
+    text-shadow:
+        0 0 5px #cdaaf9,
+        0 0 12px #cdaaf9;
+
+    z-index: 2;
+}
+
+.cursor {
+    display: inline-block;
+
+    width: 8px;
+    height: 16px;
+
+    background: #cdaaf9;
+
+    margin-left: 3px;
+
+    animation:
+        cursorBlink
+        0.8s
+        steps(1)
+        infinite;
+}
+
+@keyframes cursorBlink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+
+/* =========================
+   BIOS FLICKER
+========================= */
+
+.bios-flicker-out {
+    animation:
+        flickerOut
+        0.9s
+        linear
+        forwards;
+}
+
+
+/* =========================
+   SHARED FLICKER
+========================= */
+
+.menu-flicker-out {
+    animation:
+        flickerOut
+        0.9s
+        linear
+        forwards;
+}
+
+@keyframes flickerOut {
+
+    0% {
+        opacity: 1;
+    }
+
+    8% {
+        opacity: 0.2;
+    }
+
+    12% {
+        opacity: 0.8;
+    }
+
+    18% {
+        opacity: 0.05;
+    }
+
+    24% {
+        opacity: 0.6;
+    }
+
+    30% {
+        opacity: 0.1;
+    }
+
+    38% {
+        opacity: 0.75;
+    }
+
+    45% {
+        opacity: 0.05;
+    }
+
+    52% {
+        opacity: 0.5;
+    }
+
+    60% {
+        opacity: 0.08;
+    }
+
+    68% {
+        opacity: 0.35;
+    }
+
+    78% {
+        opacity: 0.08;
+    }
+
+    88% {
+        opacity: 0.2;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+
+/* =========================
+   INTERFACE
+========================= */
+
+#interface {
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    width: 700px;
+    max-width: 90%;
+
+    color: #cdaaf9;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 21px;
+
+    line-height: 1.7;
+
+    text-align: center;
+
+    text-shadow:
+        0 0 5px #cdaaf9,
+        0 0 12px #cdaaf9;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 3;
+}
+
+#interface-text {
+    white-space: pre-wrap;
+}
+
+
+/* =========================
+   INTERFACE CURSORS
+========================= */
+
+.interface-cursor-centered {
+    display: inline-block;
+
+    width: 9px;
+    height: 18px;
+
+    background: #cdaaf9;
+
+    animation:
+        cursorBlink
+        0.8s
+        steps(1)
+        infinite;
+}
+
+.interface-cursor {
+    display: inline-block;
+
+    width: 9px;
+    height: 18px;
+
+    background: #cdaaf9;
+
+    margin-left: 4px;
+
+    animation:
+        cursorBlink
+        0.8s
+        steps(1)
+        infinite;
+}
+
+
+/* =========================
+   MENU OPTIONS
+========================= */
+
+.menu-option {
+    display: inline-block;
+
+    cursor: pointer;
+
+    transition:
+        text-shadow
+        0.15s ease;
+}
+
+.menu-option:hover {
+    text-shadow:
+        0 0 5px #cdaaf9,
+        0 0 12px #cdaaf9,
+        0 0 20px #cdaaf9;
+}
+
+.menu-option.selected {
+    text-shadow:
+        0 0 5px #cdaaf9,
+        0 0 12px #cdaaf9,
+        0 0 25px #cdaaf9;
+}
+
+
+/* =========================
+   MENU PROMPT
+========================= */
+
+.menu-prompt {
+    display: block;
+
+    margin-top: 24px;
+
+    color: #cdaaf9;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 21px;
+
+    line-height: 1.7;
+
+    text-shadow:
+        0 0 5px #cdaaf9,
+        0 0 12px #cdaaf9;
+}
+
+.menu-prompt-cursor {
+    display: inline-block;
+
+    width: 9px;
+    height: 18px;
+
+    background: #cdaaf9;
+
+    margin-left: 4px;
+
+    animation:
+        cursorBlink
+        0.8s
+        steps(1)
+        infinite;
+}
+
+
+/* =========================
+   GALLERY
+========================= */
+
+.gallery-container {
+    width: 100%;
+
+    text-align: center;
+}
+
+.gallery-title {
+    margin-bottom: 18px;
+}
+
+.gallery-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 14px;
+
+    width: 100%;
+
+    max-height: 55vh;
+
+    overflow-y: auto;
+
+    scrollbar-width: none;
+}
+
+.gallery-grid::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* =========================
+   GALLERY TILES
+========================= */
+
+.gallery-tile {
+    width: 100%;
+
+    aspect-ratio: 1 / 1;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    border:
+        1px solid
+        rgba(205, 170, 249, 0.35);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.gallery-tile:hover {
+    transform: scale(1.025);
+
+    border-color: #cdaaf9;
+
+    box-shadow:
+        0 0 7px #cdaaf9,
+        0 0 16px rgba(205, 170, 249, 0.5);
+}
+
+.gallery-tile img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+/* =========================
+   GALLERY RETURN
+========================= */
+
+.gallery-return {
+    margin-top: 20px;
+}
+
+
+/* =========================
+   IMAGE VIEWER
+========================= */
+
+#image-viewer {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        rgba(0, 0, 0, 0.92);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.2s ease;
+
+    z-index: 10;
+}
+
+#image-viewer.active {
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+#image-viewer-content {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+#gallery-image {
+    max-width: 85vw;
+    max-height: 70vh;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    border:
+        1px solid
+        rgba(205, 170, 249, 0.6);
+
+    box-shadow:
+        0 0 8px #cdaaf9,
+        0 0 20px rgba(205, 170, 249, 0.45);
+}
+
+#gallery-credit {
+    margin-top: 16px;
+
+    color: #cdaaf9;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 21px;
+
+    line-height: 1.7;
+
+    text-align: center;
+
+    text-shadow:
+        0 0 5px #cdaaf9,
+        0 0 12px #cdaaf9;
+}
+
+#gallery-close {
+    margin-top: 14px;
+}
