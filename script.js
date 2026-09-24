@@ -53,139 +53,6 @@ Welcome.`;
 
 
 /* =========================
-   LOGO BOOT
-========================= */
-
-setTimeout(() => {
-
-    logo.classList.add(
-        "logo-flicker"
-    );
-
-}, 1000);
-
-
-/* =========================
-   BIOS CURSOR
-========================= */
-
-setTimeout(() => {
-
-    boot.innerHTML =
-        '<span class="cursor"></span>';
-
-}, 4400);
-
-
-/* =========================
-   GENERIC TYPING FUNCTION
-========================= */
-
-function typeText(
-    element,
-    text,
-    cursorHTML,
-    onComplete
-) {
-
-    let currentCharacter = 0;
-
-    element.innerHTML =
-        cursorHTML;
-
-    const typingInterval =
-        setInterval(() => {
-
-            if (
-                currentCharacter >=
-                text.length
-            ) {
-
-                clearInterval(
-                    typingInterval
-                );
-
-                if (onComplete) {
-                    onComplete();
-                }
-
-                return;
-            }
-
-            currentCharacter++;
-
-            element.innerHTML =
-                text
-                    .substring(
-                        0,
-                        currentCharacter
-                    )
-                    .replace(
-                        /\n/g,
-                        "<br>"
-                    )
-                +
-                cursorHTML;
-
-        }, typingSpeed);
-}
-
-
-/* =========================
-   BIOS TYPING
-========================= */
-
-setTimeout(() => {
-
-    typeText(
-        boot,
-        biosText,
-        '<span class="cursor"></span>'
-    );
-
-}, 6400);
-
-
-/* =========================
-   BIOS TIMING
-========================= */
-
-const biosTypingTime =
-    biosText.length *
-    typingSpeed;
-
-const biosFlickerStart =
-    6400 +
-    biosTypingTime +
-    2000;
-
-
-setTimeout(() => {
-
-    boot.classList.add(
-        "bios-flicker-out"
-    );
-
-}, biosFlickerStart);
-
-
-const biosEndTime =
-    biosFlickerStart +
-    flickerDuration;
-
-
-setTimeout(() => {
-
-    boot.innerHTML = "";
-
-    boot.classList.remove(
-        "bios-flicker-out"
-    );
-
-}, biosEndTime);
-
-
-/* =========================
    MENUS
 ========================= */
 
@@ -206,11 +73,10 @@ const menuPrompt =
 
 
 /* =========================
-   GALLERY DATA
+   GALLERIES
 ========================= */
 
 const aceGallery = [
-
     {
         image: "images/acemain.png",
         artist: "JoltzDrawz"
@@ -225,12 +91,10 @@ const aceGallery = [
         image: "images/acemb.png",
         artist: "Madnessbliss"
     }
-
 ];
 
 
 const eosGallery = [
-
     {
         image: "images/eosmain.png",
         artist: "JoltzDrawz"
@@ -300,34 +164,143 @@ const eosGallery = [
         image: "images/eoszl9.png",
         artist: "ZestyLemonss"
     }
-
 ];
 
 
 /* =========================
-   CURSORS
+   TYPING
 ========================= */
 
-function centeredCursor() {
+function typeText(
+    element,
+    text,
+    speed,
+    callback
+) {
 
-    return (
-        '<span class="interface-cursor-centered"></span>'
-    );
+    element.textContent = "";
 
-}
+    let index = 0;
 
+    function type() {
 
-function menuCursor() {
+        if (index < text.length) {
 
-    return (
-        '<span class="interface-cursor"></span>'
-    );
+            element.textContent +=
+                text.charAt(index);
 
+            index++;
+
+            setTimeout(
+                type,
+                speed
+            );
+
+        } else {
+
+            if (callback) {
+                callback();
+            }
+
+        }
+
+    }
+
+    type();
 }
 
 
 /* =========================
-   SHOW MENU
+   BIOS BOOT
+========================= */
+
+setTimeout(
+    () => {
+
+        logo.classList.add(
+            "logo-flicker"
+        );
+
+    },
+    1000
+);
+
+
+setTimeout(
+    () => {
+
+        boot.innerHTML =
+            '<span class="cursor"></span>';
+
+    },
+    4400
+);
+
+
+setTimeout(
+    () => {
+
+        boot.innerHTML = "";
+
+        typeText(
+            boot,
+            biosText,
+            typingSpeed
+        );
+
+    },
+    6400
+);
+
+
+const biosTypingTime =
+    biosText.length * typingSpeed;
+
+
+const flickerStart =
+    6400 +
+    biosTypingTime +
+    2000;
+
+
+setTimeout(
+    () => {
+
+        boot.classList.add(
+            "bios-flicker-out"
+        );
+
+    },
+    flickerStart
+);
+
+
+const biosEndTime =
+    flickerStart +
+    flickerDuration;
+
+
+setTimeout(
+    () => {
+
+        boot.innerHTML = "";
+
+        interfaceElement.style.opacity =
+            "1";
+
+        interfaceElement.style.pointerEvents =
+            "auto";
+
+        interfaceText.innerHTML =
+            '<span class="cursor"></span>';
+
+    },
+    biosEndTime
+);
+
+
+/* =========================
+   MENU SYSTEM
 ========================= */
 
 function showMenu(
@@ -342,80 +315,47 @@ function showMenu(
         "auto";
 
     interfaceText.innerHTML =
-        centeredCursor();
+        '<span class="cursor"></span>';
 
-    setTimeout(() => {
+    setTimeout(
+        () => {
 
-        typeMenu(
-            menuItems,
-            onSelect
-        );
+            typeMenu(
+                menuItems,
+                onSelect
+            );
 
-    }, 700);
-
+        },
+        700
+    );
 }
 
-
-/* =========================
-   TYPE MENU
-========================= */
 
 function typeMenu(
     menuItems,
     onSelect
 ) {
 
-    let currentCharacter = 0;
+    interfaceText.innerHTML = "";
 
-    const fullMenu =
-        menuItems.join("\n");
+    const menuText =
+        menuItems.join("\n\n");
 
-    interfaceText.innerHTML =
-        menuCursor();
+    typeText(
+        interfaceText,
+        menuText,
+        typingSpeed,
+        () => {
 
-    const menuTypingInterval =
-        setInterval(() => {
+            finishMenu(
+                menuItems,
+                onSelect
+            );
 
-            if (
-                currentCharacter >=
-                fullMenu.length
-            ) {
-
-                clearInterval(
-                    menuTypingInterval
-                );
-
-                finishMenu(
-                    menuItems,
-                    onSelect
-                );
-
-                return;
-            }
-
-            currentCharacter++;
-
-            interfaceText.innerHTML =
-                fullMenu
-                    .substring(
-                        0,
-                        currentCharacter
-                    )
-                    .replace(
-                        /\n/g,
-                        "<br>"
-                    )
-                +
-                menuCursor();
-
-        }, typingSpeed);
-
+        }
+    );
 }
 
-
-/* =========================
-   FINISH MENU
-========================= */
 
 function finishMenu(
     menuItems,
@@ -425,38 +365,61 @@ function finishMenu(
     interfaceText.innerHTML = "";
 
     menuItems.forEach(
-        (option, index) => {
+        (
+            item,
+            index
+        ) => {
 
-            const optionElement =
+            const option =
                 document.createElement(
-                    "span"
+                    "div"
                 );
 
-            optionElement.className =
-                "menu-option";
-
-            optionElement.dataset.option =
-                index + 1;
-
-            optionElement.textContent =
-                option;
-
-            interfaceText.appendChild(
-                optionElement
+            option.classList.add(
+                "menu-option"
             );
 
+            option.textContent =
+                item;
+
+            /*
+                RETURN is option 0.
+                Everything else uses its
+                normal menu number.
+            */
+
             if (
-                index <
-                menuItems.length - 1
+                item.includes("RETURN")
             ) {
 
-                interfaceText.appendChild(
-                    document.createElement(
-                        "br"
-                    )
-                );
+                option.dataset.option =
+                    "0";
+
+            } else {
+
+                option.dataset.option =
+                    String(index + 1);
 
             }
+
+            option.addEventListener(
+                "click",
+                () => {
+
+                    selectMenuOption(
+                        option,
+                        Number(
+                            option.dataset.option
+                        ),
+                        onSelect
+                    );
+
+                }
+            );
+
+            interfaceText.appendChild(
+                option
+            );
 
         }
     );
@@ -464,127 +427,104 @@ function finishMenu(
 
     const prompt =
         document.createElement(
-            "span"
+            "div"
         );
 
-    prompt.className =
-        "menu-prompt";
+    prompt.classList.add(
+        "menu-prompt"
+    );
+
+    prompt.textContent =
+        menuPrompt;
 
     interfaceText.appendChild(
         prompt
     );
 
 
-    typeText(
-        prompt,
-        menuPrompt,
-        "",
-        () => {
+    const promptCursor =
+        document.createElement(
+            "span"
+        );
 
-            const cursor =
-                document.createElement(
-                    "span"
-                );
-
-            cursor.className =
-                "menu-prompt-cursor";
-
-            prompt.appendChild(
-                cursor
-            );
-
-        }
+    promptCursor.classList.add(
+        "cursor"
     );
 
-
-    interfaceText.onclick =
-        (event) => {
-
-            const option =
-                event.target.closest(
-                    ".menu-option"
-                );
-
-            if (!option) {
-                return;
-            }
-
-            selectMenuOption(
-                option.dataset.option,
-                onSelect
-            );
-
-        };
-
+    prompt.appendChild(
+        promptCursor
+    );
 }
 
 
 /* =========================
-   SELECT MENU OPTION
+   MENU SELECTION
 ========================= */
 
 function selectMenuOption(
     option,
+    selectedNumber,
     onSelect
 ) {
 
     if (
         interfaceElement.classList.contains(
-            "menu-flicker-out"
+            "transitioning"
         )
     ) {
 
         return;
+
     }
 
+    interfaceElement.classList.add(
+        "transitioning"
+    );
 
-    const selectedOption =
-        interfaceText.querySelector(
-            `[data-option="${option}"]`
-        );
-
-
-    if (!selectedOption) {
-        return;
-    }
-
-
-    selectedOption.classList.add(
+    option.classList.add(
         "selected"
     );
 
 
-    interfaceElement.classList.add(
-        "menu-flicker-out"
+    setTimeout(
+        () => {
+
+            interfaceElement.classList.add(
+                "menu-flicker-out"
+            );
+
+        },
+        100
     );
 
 
-    setTimeout(() => {
+    setTimeout(
+        () => {
 
-        interfaceText.innerHTML =
-            "";
-
-        interfaceElement.classList.remove(
-            "menu-flicker-out"
-        );
-
-        interfaceElement.style.opacity =
-            "0";
-
-        interfaceElement.style.pointerEvents =
-            "none";
-
-
-        if (onSelect) {
-
-            onSelect(
-                Number(option)
+            interfaceElement.classList.remove(
+                "menu-flicker-out"
             );
 
-        }
+            interfaceElement.classList.remove(
+                "transitioning"
+            );
 
-    }, flickerDuration);
+            interfaceText.innerHTML = "";
 
+            interfaceElement.style.opacity =
+                "0";
+
+            interfaceElement.style.pointerEvents =
+                "none";
+
+
+            onSelect(
+                selectedNumber
+            );
+
+        },
+        flickerDuration
+    );
 }
 
 
@@ -610,11 +550,13 @@ function handleMainMenuSelection(
 
         showStaffMenu();
 
+        return;
+
     }
 
     /*
-       Options 2 and 3 are intentionally
-       left unimplemented for now.
+        Options 2 and 3 are currently
+        intentionally unimplemented.
     */
 
 }
@@ -646,6 +588,7 @@ function handleStaffMenuSelection(
         );
 
         return;
+
     }
 
 
@@ -657,8 +600,13 @@ function handleStaffMenuSelection(
         );
 
         return;
+
     }
 
+
+    /*
+        OPTION 0 = RETURN TO MAIN MENU
+    */
 
     if (option === 0) {
 
@@ -684,17 +632,17 @@ function showGallery(
     interfaceElement.style.pointerEvents =
         "auto";
 
-
     interfaceText.innerHTML = "";
 
 
-    const container =
+    const galleryContainer =
         document.createElement(
             "div"
         );
 
-    container.className =
-        "gallery-container";
+    galleryContainer.classList.add(
+        "gallery-container"
+    );
 
 
     const galleryTitle =
@@ -702,14 +650,15 @@ function showGallery(
             "div"
         );
 
-    galleryTitle.className =
-        "gallery-title";
+    galleryTitle.classList.add(
+        "gallery-title"
+    );
 
     galleryTitle.textContent =
         title + " GALLERY";
 
 
-    container.appendChild(
+    galleryContainer.appendChild(
         galleryTitle
     );
 
@@ -719,20 +668,24 @@ function showGallery(
             "div"
         );
 
-    grid.className =
-        "gallery-grid";
+    grid.classList.add(
+        "gallery-grid"
+    );
 
 
     gallery.forEach(
-        (item) => {
+        (
+            item
+        ) => {
 
             const tile =
                 document.createElement(
                     "div"
                 );
 
-            tile.className =
-                "gallery-tile";
+            tile.classList.add(
+                "gallery-tile"
+            );
 
 
             const image =
@@ -773,24 +726,30 @@ function showGallery(
     );
 
 
-    container.appendChild(
+    galleryContainer.appendChild(
         grid
     );
 
+
+    /*
+        RETURN = OPTION 0
+    */
 
     const returnOption =
         document.createElement(
             "div"
         );
 
-    returnOption.className =
-        "menu-option gallery-return";
-
-    returnOption.dataset.option =
-        "0";
+    returnOption.classList.add(
+        "menu-option",
+        "gallery-return"
+    );
 
     returnOption.textContent =
         "[ 00 ] RETURN";
+
+    returnOption.dataset.option =
+        "0";
 
 
     returnOption.addEventListener(
@@ -805,20 +764,20 @@ function showGallery(
     );
 
 
-    container.appendChild(
+    galleryContainer.appendChild(
         returnOption
     );
 
 
     interfaceText.appendChild(
-        container
+        galleryContainer
     );
 
 }
 
 
 /* =========================
-   GALLERY IMAGE VIEWER
+   IMAGE VIEWER
 ========================= */
 
 function openImage(
@@ -829,13 +788,8 @@ function openImage(
     galleryImage.src =
         image;
 
-    galleryImage.alt =
-        "Enlarged artwork";
-
-
     galleryCredit.textContent =
         "ARTIST: " + artist;
-
 
     imageViewer.classList.add(
         "active"
@@ -859,29 +813,18 @@ function closeImage() {
 }
 
 
-/* =========================
-   CLOSE IMAGE
-========================= */
-
 galleryClose.addEventListener(
     "click",
-    () => {
-
-        closeImage();
-
-    }
+    closeImage
 );
 
-
-/* Clicking the dark area closes it */
 
 imageViewer.addEventListener(
     "click",
     (event) => {
 
         if (
-            event.target ===
-            imageViewer
+            event.target === imageViewer
         ) {
 
             closeImage();
@@ -893,51 +836,33 @@ imageViewer.addEventListener(
 
 
 /* =========================
-   TRANSITION
+   TRANSITIONS
 ========================= */
 
 function transitionTo(
     nextScreen
 ) {
 
-    if (
-        interfaceElement.classList.contains(
-            "menu-flicker-out"
-        )
-    ) {
-
-        return;
-    }
-
-
     interfaceElement.classList.add(
         "menu-flicker-out"
     );
 
 
-    setTimeout(() => {
+    setTimeout(
+        () => {
 
-        interfaceText.innerHTML =
-            "";
+            interfaceElement.classList.remove(
+                "menu-flicker-out"
+            );
 
-        interfaceElement.classList.remove(
-            "menu-flicker-out"
-        );
-
-        interfaceElement.style.opacity =
-            "0";
-
-        interfaceElement.style.pointerEvents =
-            "none";
-
-
-        if (nextScreen) {
+            interfaceText.innerHTML =
+                "";
 
             nextScreen();
 
-        }
-
-    }, flickerDuration);
+        },
+        flickerDuration
+    );
 
 }
 
@@ -950,16 +875,23 @@ document.addEventListener(
     "keydown",
     (event) => {
 
-        /* ESC closes enlarged artwork */
+        /*
+            ESC closes enlarged image.
+        */
 
         if (
-            event.key === "Escape" &&
-            imageViewer.classList.contains(
-                "active"
-            )
+            event.key === "Escape"
         ) {
 
-            closeImage();
+            if (
+                imageViewer.classList.contains(
+                    "active"
+                )
+            ) {
+
+                closeImage();
+
+            }
 
             return;
 
@@ -967,49 +899,74 @@ document.addEventListener(
 
 
         /*
-           0 returns from a gallery.
-           This specifically checks for
-           the gallery RETURN option.
+            0 = RETURN
+
+            This works for:
+            - Staff menu
+            - ACE gallery
+            - EOS gallery
         */
 
         if (
-            event.key === "0" &&
-            !imageViewer.classList.contains(
-                "active"
-            )
+            event.key === "0"
         ) {
 
-            const returnOption =
-                interfaceText.querySelector(
-                    '[data-option="0"]'
-                );
-
-            if (returnOption) {
-
-                returnOption.click();
+            if (
+                imageViewer.classList.contains(
+                    "active"
+                )
+            ) {
 
                 return;
 
             }
 
+
+            const returnOption =
+                document.querySelector(
+                    '[data-option="0"]'
+                );
+
+
+            if (returnOption) {
+
+                returnOption.click();
+
+            }
+
+            return;
+
         }
 
 
         /*
-           Number keys 1-3 select
-           normal menu options.
+            Normal menu numbers.
         */
 
         if (
-            event.key === "1" ||
-            event.key === "2" ||
-            event.key === "3"
+            ["1", "2", "3"].includes(
+                event.key
+            )
         ) {
 
+            if (
+                imageViewer.classList.contains(
+                    "active"
+                )
+            ) {
+
+                return;
+
+            }
+
+
             const option =
-                interfaceText.querySelector(
-                    `[data-option="${event.key}"]`
+                document.querySelector(
+                    '[data-option="' +
+                    event.key +
+                    '"]'
                 );
+
 
             if (option) {
 
@@ -1027,27 +984,11 @@ document.addEventListener(
    START MAIN MENU
 ========================= */
 
-setTimeout(() => {
+setTimeout(
+    () => {
 
-    interfaceElement.style.opacity =
-        "1";
+        showMainMenu();
 
-    interfaceElement.style.pointerEvents =
-        "auto";
-
-    interfaceText.innerHTML =
-        centeredCursor();
-
-}, biosEndTime);
-
-
-const menuStartTime =
-    biosEndTime +
-    1000;
-
-
-setTimeout(() => {
-
-    showMainMenu();
-
-}, menuStartTime);
+    },
+    biosEndTime + 1000
+);
